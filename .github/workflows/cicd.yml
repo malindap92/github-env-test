@@ -48,7 +48,7 @@ jobs:
   
   deploy-prod:
     environment:
-      name: Prod
+      name: Production
       url: http://example.com
     needs: deploy-staging
     runs-on: ubuntu-latest
