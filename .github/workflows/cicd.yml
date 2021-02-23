@@ -1,0 +1,60 @@
+name: CICD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: echo 'Build'
+
+  deploy-qa:
+    if: github.ref == 'refs/heads/master'
+    environment:
+      name: QA
+      url: http://qa.example.com
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - run: echo 'QA deploy'
+
+  deploy-staging:
+    environment:
+      name: Staging
+      url: http://staging.example.com
+    needs: deploy-qa
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - run: echo 'Staging deploy'
+  
+  deploy-prod:
+    environment:
+      name: Prod
+      url: http://example.com
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - run: echo 'Prod deploy'
